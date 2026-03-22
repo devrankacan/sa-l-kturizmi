@@ -22,6 +22,7 @@ app.use('/api/transferler', require('./routes/transfer'));
 app.use('/api/konaklamalar', require('./routes/konaklama'));
 app.use('/api/crm', require('./routes/crm'));
 app.use('/api/tedaviler', require('./routes/tedavi'));
+app.use('/api/whatsapp', require('./routes/whatsapp'));
 
 // Health check
 app.get('/api/health', (req, res) => {
