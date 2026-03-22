@@ -14,13 +14,17 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     if (!isLoggedIn() && !PUBLIC_ROUTES.includes(router.pathname)) {
-      router.replace('/login');
+      router.replace('/login').then(() => setReady(true));
     } else {
       setReady(true);
     }
   }, [router.pathname]);
 
-  if (!ready) return null;
+  if (!ready) return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#f9fafb' }}>
+      <div style={{ color: '#6b7280', fontSize: '14px' }}>Yükleniyor...</div>
+    </div>
+  );
 
   if (PUBLIC_ROUTES.includes(router.pathname)) {
     return <Component {...pageProps} />;
