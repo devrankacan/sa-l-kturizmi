@@ -120,3 +120,36 @@ exports.konusmalariGetir = async (req, res) => {
     .limit(100);
   res.json({ basari: true, konusmalar });
 };
+
+// GET /api/whatsapp/konusmalar/:id - Tek konuşma detayı
+exports.konusmaGetir = async (req, res) => {
+  const konusma = await WhatsappKonusma.findById(req.params.id)
+    .populate('hastaId', 'ad soyad hastaNo durum');
+  if (!konusma) return res.status(404).json({ basari: false, mesaj: 'Konuşma bulunamadı' });
+  res.json({ basari: true, konusma });
+};
+
+// POST /api/whatsapp/konusmalar/:id/mesaj - Koordinatör mesaj gönderir
+exports.koordinatorMesajGonder = async (req, res) => {
+  const { metin } = req.body;
+  if (!metin?.trim()) return res.status(400).json({ basari: false, mesaj: 'Mesaj boş olamaz' });
+
+  const konusma = await WhatsappKonusma.findById(req.params.id);
+  if (!konusma) return res.status(404).json({ basari: false, mesaj: 'Konuşma bulunamadı' });
+
+  // WhatsApp API üzerinden gönder
+  await mesajGonder(konusma.telefon, metin);
+
+  // Konuşmaya kaydet
+  konusma.mesajlar.push({ yon: 'giden', metin });
+  await konusma.save();
+
+  // Hasta varsa nota ekle
+  if (konusma.hastaId) {
+    await Hasta.findByIdAndUpdate(konusma.hastaId, {
+      $push: { notlar: { metin: `[WhatsApp - Koordinatör] ${metin}`, kullanici: req.kullanici._id } }
+    });
+  }
+
+  res.json({ basari: true, konusma });
+};

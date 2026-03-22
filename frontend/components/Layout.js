@@ -6,10 +6,12 @@ import { logout, getUser } from '../lib/auth';
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: '📊' },
   { href: '/hastalar', label: 'Hastalar', icon: '👥' },
+  { href: '/whatsapp', label: 'WhatsApp', icon: '💬' },
   { href: '/teklifler', label: 'Teklifler', icon: '📋' },
   { href: '/randevular', label: 'Randevular', icon: '📅' },
   { href: '/transferler', label: 'Transferler', icon: '🚗' },
   { href: '/konaklamalar', label: 'Konaklamalar', icon: '🏨' },
+  { href: '/ayarlar', label: 'Ayarlar', icon: '⚙️' },
 ];
 
 export default function Layout({ children }) {
