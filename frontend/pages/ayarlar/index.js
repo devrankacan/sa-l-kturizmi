@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/api';
+import { useSettings } from '../../lib/settingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
@@ -14,6 +15,7 @@ const BolumBaslik = ({ ikon, baslik, aciklama }) => (
 );
 
 export default function AyarlarSayfasi() {
+  const { setAyarlar } = useSettings();
   const [form, setForm] = useState({
     firmaAdi: '',
     slogan: '',
@@ -93,7 +95,8 @@ export default function AyarlarSayfasi() {
         await api.post('/ayarlar/logo', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
       }
       // Ayarları kaydet
-      await api.put('/ayarlar', form);
+      const res = await api.put('/ayarlar', form);
+      setAyarlar(prev => ({ ...prev, ...res.data.ayarlar }));
       setBasarili(true);
       setTimeout(() => setBasarili(false), 3000);
     } catch (err) {

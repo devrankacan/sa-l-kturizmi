@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isLoggedIn } from '../lib/auth';
 import Layout from '../components/Layout';
+import { SettingsProvider } from '../lib/settingsContext';
 
 const PUBLIC_ROUTES = ['/login'];
 
@@ -31,8 +32,10 @@ export default function App({ Component, pageProps }) {
   }
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <SettingsProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </SettingsProvider>
   );
 }
