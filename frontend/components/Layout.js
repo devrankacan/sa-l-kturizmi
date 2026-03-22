@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { logout, getUser } from '../lib/auth';
-import { useSettings } from '../lib/settingsContext';
+import { useSettings, kontrastRenk } from '../lib/settingsContext';
 
 const UPLOADS_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace('/api', '/uploads');
 
@@ -23,8 +23,9 @@ export default function Layout({ children }) {
   const user = getUser();
   const { ayarlar } = useSettings();
   const renk = ayarlar?.primaryRenk || '#3b82f6';
+  const yaziRenk = kontrastRenk(renk);
 
-  const aktifStil = { backgroundColor: renk };
+  const aktifStil = { backgroundColor: renk, color: yaziRenk };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
@@ -56,7 +57,7 @@ export default function Layout({ children }) {
               <Link key={item.href} href={item.href}
                 style={aktif ? aktifStil : {}}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm font-medium transition-colors
-                  ${aktif ? 'text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>
+                  ${aktif ? '' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>
                 <span>{item.icon}</span>
                 {item.label}
               </Link>
@@ -68,8 +69,8 @@ export default function Layout({ children }) {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
           <div className="flex items-center gap-3 mb-3">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-              style={{ backgroundColor: renk }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+              style={{ backgroundColor: renk, color: yaziRenk }}
             >
               {user?.ad?.[0] || 'A'}
             </div>
